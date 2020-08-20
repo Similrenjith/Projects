@@ -166,54 +166,7 @@ BEGIN
 										Data will insert id patient table MRN column is NOT NULL*/
 END
 GO
-/****** Object:  StoredProcedure [dbo].[uspSavePatient]    Script Date: 16/08/2020 5:54:02 PM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-CREATE Procedure [dbo].[uspSavePatient]
-(
-@Status as int out,
-@Message as nvarchar(max) out,
-@pPatient nvarchar(150),
-@pMRN INT,
-@pCSN INT,
-@pGender CHAR(1),
-@pPhone Varchar(20),
-@pSSN Varchar(30),
-@pPassportNo Varchar(20),
-@pLocationCode Varchar(5),
-@pLocationId Int,
-@pDOB DateTime,
-@ActionType int
-)
-as
-begin
-begin try
-set @Status = 0
-set @Message = 'Success'
-if(@ActionType = 0)
-begin
 
-insert into dbo.PatientTbl(Patient,MRN,CSN,Gender,Phone,SSN,PassportNo,LocationCode,LocationId,DOB,UpdateDateTime)
-values(@pPatient,@pMRN,@pCSN,@pGender,@pPhone,@pSSN,@pPassportNo,@pLocationCode,@pLocationId,@pDOB,GetDate()
-)
-end
-else if(@ActionType = 1)
-begin
-	update dbo.PatientTbl
-	set Patient=@pPatient,CSN=@pCSN,Gender=@pGender,Phone=@pPhone,SSN=@pSSN,
-	PassportNo=@pPassportNo,LocationCode=@pLocationCode,LocationId=@pLocationId,DOB=@pDOB,UpdateDateTime=GetDate() where MRN = @pMRN
-
-end
-
-end try
-begin catch
-set @Status = 2
-set @Message = ERROR_MESSAGE()
-end catch
-end
-GO
 USE [master]
 GO
 ALTER DATABASE [PatientDb] SET  READ_WRITE 
